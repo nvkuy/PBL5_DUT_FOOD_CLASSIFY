@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <h1>HOME</h1>
+{% endblock %}
+
+{% block content %}
+
+    <div class="content">
+
+        <p>Đặt camera cách món ăn từ 30 đến 50cm, sau khi bấm chụp đợi 5s rồi bấm lấy ảnh</p>
+
+        <p>
+            <button onclick="captureImage()">Chụp ảnh</button>
+            <button onclick="location.reload();">Lấy ảnh</button>
+            <button onclick="classify()">Hướng dẫn nấu</button>
+        </p>
+
+    </div>
+
+    <!-- <div><p id="err_mes"></p></div> -->
+
+    <div><img src="http://{{ esp_ip }}/image" id="photo" width="100%"></div>
+
+    <script>
+
+        async function captureImage() {
+            fetch('http://{{ esp_ip }}/image', {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok)
+                    alert('Khoảng cách camera chưa phù hợp!');
+                return response.text();
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+
+        async function classify() {
+            let img = document.getElementById('photo');
+            const response = await fetch(img.src);
+            const blob = await response.blob();
+
+            let formData = new FormData();
+            formData.append('img', blob);
+
+            fetch('/guide', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                document.open();
+                document.write(result);
+                document.close();
+            })
+            .catch(error => {
+                console.log(error.message);
+            });
+        }
+
+    </script>
+
+{% endblock %}
