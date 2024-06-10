@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <h1>HOME</h1>
+    <h1>Chọn ảnh món ăn</h1>
 {% endblock %}
 
 {% block content %}
@@ -15,6 +15,13 @@
             <button onclick="location.reload();">Lấy ảnh</button>
             <button onclick="classify()">Hướng dẫn nấu</button>
         </p>
+
+        <p>Hoặc upload ảnh món ăn:</p>
+
+        <form action="/guide" method="post" enctype="multipart/form-data">
+            <input type="file" id="img" name="img">
+            <input type="submit" value="Hướng dẫn nấu">
+        </form>
 
     </div>
 
